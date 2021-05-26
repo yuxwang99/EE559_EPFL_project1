@@ -9,6 +9,21 @@ import numpy as np
 def run(train_data_loader, test_data_loader,
           model, optimizer, criterion, AL_weight=0.5,
           epochs = 25,  weight_sharing=False, auxiliary_loss=False):
+    """
+    Train model with given dataset and parameters, and test the model after training
+    Args:
+        train_data_loader: data loader for training set
+        test_data_loader: data load for test set
+        model: the model to be trained
+        optimizer: optimizer for training
+        criterion: loss function
+        AL_weight: weight of auxiliary loss
+        epochs: number of training epochs
+        weight_sharing: if applying weight sharing
+        auxiliary_loss: if applying auxiliary loss
+    Return:
+        acc_test: accuracy on test set
+    """
 
     for epoch in range(epochs):
         for (image, target, classes) in train_data_loader:
@@ -39,7 +54,17 @@ def run(train_data_loader, test_data_loader,
 
 
 def evaluate(model, data_loader, auxiliary_loss, criterion):
-    
+    """
+    Evaluatinmg given network model with given dataset and criterion
+    Args:
+        model: the model to be evaluated
+        data_loader: dataset used to evaluate the model
+        auxiliary_loss: if the model using auxiliary loss 
+        (the model using auxiliary loss retruns 3 values, but we only need the final output)
+        criterion: loss function
+    Returns:
+        testing accuracy, testing loss
+    """
     correct = 0
     total = 0
     loss = 0
@@ -63,6 +88,24 @@ def evaluate(model, data_loader, auxiliary_loss, criterion):
 
 def cross_validation(k_fold, lr_set, reg_set, batchsize_set, model, criterion, AL_weight, epochs,
                      weight_sharing = False, auxiliary_loss = False):
+    """
+    K-fold cross validation to optimize hyperprameters learning rate (lr), regularization coefficoent (reg), and batchsize on the given model
+    Args:
+        k_fold: number of cross validation folds
+        lr_set: set of learning rate (lr)
+        reg_set: set of regularization coefficoent (reg)
+        batchsize_set: set of batchsize
+        model: network model
+        criterion: loss function
+        AL_weight: Weight of auxiliary loss
+        epochs: number of epochs
+        weight_sharing: if applying weight sharing
+        auxiliary_loss: if applying auxiliary loss
+    Returns:
+        best_lr: best learning rate
+        best_reg: best regularization coefficoent
+        best_batchsize: best batch size
+    """
 
     data_input, data_target, data_class, _, _, _ = generate_pair_sets(1000) # generate data set
 
